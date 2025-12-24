@@ -1,6 +1,6 @@
 # alternate-icons
 
-Capacitor plugin that changes the app icon
+Capacitor plugin that allows changing an OutSystems Capacitor Mobile App's icon programmatically
 
 ## Install
 
