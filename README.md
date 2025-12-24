@@ -1,4 +1,4 @@
-# alternate-icons
+# Capacitor Alternate Icons - OutSystems
 
 Capacitor plugin that allows changing an OutSystems Capacitor Mobile App's icon programmatically
 
