@@ -1,38 +1,23 @@
 const fs = require('fs');
 const path = require('path');
-const os = require('os');
-const { execSync } = require('child_process');
 
 const DENSITIES = ['mdpi', 'hdpi', 'xhdpi', 'xxhdpi', 'xxxhdpi'];
 
 const platform = process.env.CAPACITOR_PLATFORM_NAME || '';
 const projectDirPath = process.env.CAPACITOR_ROOT_DIR || process.cwd();
 const webDirPath = process.env.CAPACITOR_WEB_DIR || 'dist';
-let tmpDir;
 
 console.log('\tAlternate Icons hook - platform:', platform);
 
-const unzipAndCopyIcons = (zipDirectory, platform) => {
-  let zipFilePath = path.resolve(zipDirectory, 'alternateicons.zip');
-    if (!fs.existsSync(zipFilePath)) {
-        const foundZipFile = fs.readdirSync(zipDirectory).find(f => f.toLowerCase().startsWith('alternateicons') && f.toLowerCase().endsWith('.zip'));
-        if (!foundZipFile) {
-            console.error('\t[SKIPPED] alternateicons.zip does not seem to exist. Skipping this action');
-            return
-        }
-        zipFilePath = path.resolve(zipDirectory, foundZipFile);
-    }
+const imgDir = path.resolve(projectDirPath, webDirPath, 'img');
 
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'alternateicons-'));
-    try {
-        execSync(`unzip -qq "${zipFilePath}" -d "${tmpDir}"`);
-    } catch (err) {
-        console.error('\t[ERROR] Failed to unzip file:', err.message);
-        process.exit(1);
-    }
+if (!fs.existsSync(imgDir)) {
+  console.warn('\t[SKIPPED] Icons source directory does not exist:', imgDir);
+  process.exit(0);
+}
 
-  const files = fs
-  .readdirSync(tmpDir)
+const files = fs
+  .readdirSync(imgDir)
   .filter(
     name =>
       name.indexOf('ic_icon') > -1 &&
@@ -40,25 +25,21 @@ const unzipAndCopyIcons = (zipDirectory, platform) => {
   )
   .sort();
 
-  if (files.length === 0) {
-    console.warn('\t[SKIPPED] No icon files starting with "ic_icon" and ending with .png found in', tmpDir);
-    fs.rmSync(tmpDir, { recursive: true, force: true });
-    process.exit(0);
-  }
-  if (platform === 'android') {
-    copyIconsAndroid(files);
-  } else if (platform === 'ios') {
-    copyIconsIos(files);
-    enableIosAlternateAppIcons();
-  } else {
-    console.log('\t[SKIPPED] Platform not handled by Alternate Icons hook:', platform);
-  }
-
-  fs.rmSync(tmpDir, { recursive: true, force: true });
-  console.log('\t[FINISH] Temporary files cleaned up.');
+if (files.length === 0) {
+  console.warn('\t[SKIPPED] No icon files starting with "ic_icon" and ending with .png found in', imgDir);
+  process.exit(0);
 }
 
-const copyIconsAndroid = (files) =>{
+if (platform === 'android') {
+  copyIconsAndroid(files);
+} else if (platform === 'ios') {
+  copyIconsIos(files);
+  enableIosAlternateAppIcons();
+} else {
+  console.log('\t[SKIPPED] Platform not handled by Alternate Icons hook:', platform);
+}
+
+function copyIconsAndroid(files) {
   const androidResBaseDir = path.resolve(
     projectDirPath,
     'android',
@@ -69,7 +50,7 @@ const copyIconsAndroid = (files) =>{
   );
 
   files.forEach((file, index) => {
-    const srcPath = path.join(tmpDir, file);
+    const srcPath = path.join(imgDir, file);
     const buffer = fs.readFileSync(srcPath);
     const baseName = `ic_icon${index + 1}`;
 
@@ -83,7 +64,7 @@ const copyIconsAndroid = (files) =>{
   });
 }
 
-const copyIconsIos = (files) =>{
+function copyIconsIos(files) {
   const iosAssetsBaseDir = path.resolve(
     projectDirPath,
     'ios',
@@ -114,7 +95,7 @@ const copyIconsIos = (files) =>{
   }
 
   files.forEach((file, index) => {
-    const srcPath = path.join(tmpDir, file);
+    const srcPath = path.join(imgDir, file);
     const buffer = fs.readFileSync(srcPath);
 
     const iconName = `icon${index + 1}`; 
@@ -153,7 +134,7 @@ const copyIconsIos = (files) =>{
 }
 
 
-const enableIosAlternateAppIcons = () =>{
+function enableIosAlternateAppIcons() {
   const pbxprojPath = path.resolve(
     projectDirPath,
     'ios',
@@ -199,5 +180,3 @@ const enableIosAlternateAppIcons = () =>{
   fs.writeFileSync(pbxprojPath, content, 'utf8');
   console.log('\t[SUCCESS][ios] Enabled ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS in all build configs.');
 }
-
-unzipAndCopyIcons(webDirPath, platform);
