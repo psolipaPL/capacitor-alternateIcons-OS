@@ -1,0 +1,47 @@
+{
+  "api": {
+    "name": "AlternateIconsPlugin",
+    "slug": "alternateiconsplugin",
+    "docs": "",
+    "tags": [],
+    "methods": [
+      {
+        "name": "changeIcon",
+        "signature": "(options: { alias: string; aliases: string[]; defaultAlias: string; cloneDefaultAlias: string; }) => Promise<void>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ alias: string; aliases: string[]; defaultAlias: string; cloneDefaultAlias: string; }"
+          }
+        ],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [],
+        "slug": "changeicon"
+      },
+      {
+        "name": "resetIcon",
+        "signature": "(options: { aliases: string[]; defaultAlias: string; cloneDefaultAlias: string; }) => Promise<void>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ aliases: string[]; defaultAlias: string; cloneDefaultAlias: string; }"
+          }
+        ],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [],
+        "slug": "reseticon"
+      }
+    ],
+    "properties": []
+  },
+  "interfaces": [],
+  "enums": [],
+  "typeAliases": [],
+  "pluginConfigs": []
+}
