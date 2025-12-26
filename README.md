@@ -2,13 +2,6 @@
 
 Capacitor plugin that allows changing an OutSystems Capacitor Mobile App's icon programmatically
 
-## Install
-
-```bash
-npm install alternate-icons
-npx cap sync
-```
-
 ## API
 
 <docgen-index>
