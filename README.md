@@ -2,6 +2,8 @@
 
 Capacitor plugin that allows changing an OutSystems Capacitor Mobile App's icon programmatically
 
+Created by: Paulo Solipa
+
 ## API
 
 <docgen-index>
