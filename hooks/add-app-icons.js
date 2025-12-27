@@ -9,7 +9,7 @@ const webDirPath = process.env.CAPACITOR_WEB_DIR || 'dist';
 
 console.log('\tAlternate Icons hook - platform:', platform);
 
-const imgDir = path.resolve(projectDirPath, webDirPath, 'img');
+const imgDir = path.resolve(projectDirPath, webDirPath);
 
 if (!fs.existsSync(imgDir)) {
   console.warn('\t[SKIPPED] Icons source directory does not exist:', imgDir);
@@ -33,7 +33,6 @@ if (files.length === 0) {
 if (platform === 'android') {
   copyIconsAndroid(files);
 } else if (platform === 'ios') {
-  //copyIconsIos(files);
   enableIosAlternateAppIcons();
 } else {
   console.log('\t[SKIPPED] Platform not handled by Alternate Icons hook:', platform);
@@ -63,76 +62,6 @@ function copyIconsAndroid(files) {
     });
   });
 }
-
-/*function copyIconsIos(files) {
-  const iosAssetsBaseDir = path.resolve(
-    projectDirPath,
-    'ios',
-    'App',
-    'App',
-    'Assets.xcassets'
-  );
-
-  if (!fs.existsSync(iosAssetsBaseDir)) {
-    console.warn('\t[SKIPPED] iOS Assets.xcassets directory does not exist:', iosAssetsBaseDir);
-    return;
-  }
-
-  const appIconSetDir = path.join(iosAssetsBaseDir, 'AppIcon.appiconset');
-  const appIconContentsPath = path.join(appIconSetDir, 'Contents.json');
-
-  if (!fs.existsSync(appIconContentsPath)) {
-    console.warn('\t[SKIPPED] AppIcon.appiconset/Contents.json not found:', appIconContentsPath);
-    return;
-  }
-
-  let appIconContents;
-  try {
-    appIconContents = JSON.parse(fs.readFileSync(appIconContentsPath, 'utf8'));
-  } catch (e) {
-    console.error('\t[ERROR] Failed to parse AppIcon Contents.json:', e);
-    return;
-  }
-
-  files.forEach((file, index) => {
-    const srcPath = path.join(imgDir, file);
-    const buffer = fs.readFileSync(srcPath);
-
-    const iconName = `icon${index + 1}`; 
-    const altIconSetDir = path.join(iosAssetsBaseDir, `${iconName}.appiconset`);
-    fs.mkdirSync(altIconSetDir, { recursive: true });
-
-    const altContents = {
-      images: [],
-      info: appIconContents.info
-    };
-
-    appIconContents.images.forEach((imgDef, imgIndex) => {
-      const origFilename = imgDef.filename || `AppIcon-${imgIndex}.png`;
-      const ext = path.extname(origFilename) || '.png';
-      const base = path.basename(origFilename, ext);
-
-      const newFilename = `${base}-${iconName}${ext}`;
-      const destPath = path.join(altIconSetDir, newFilename);
-
-      fs.writeFileSync(destPath, buffer);
-
-      const newImgDef = Object.assign({}, imgDef, {
-        filename: newFilename
-      });
-
-      altContents.images.push(newImgDef);
-    });
-
-    fs.writeFileSync(
-      path.join(altIconSetDir, 'Contents.json'),
-      JSON.stringify(altContents, null, 2)
-    );
-
-    console.log(`\t[SUCCESS][ios] Cloned AppIcon.appiconset -> ${iconName}.appiconset using ${file}`);
-  });
-}*/
-
 
 function enableIosAlternateAppIcons() {
   const pbxprojPath = path.resolve(
