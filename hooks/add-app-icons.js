@@ -33,7 +33,7 @@ if (files.length === 0) {
 if (platform === 'android') {
   copyIconsAndroid(files);
 } else if (platform === 'ios') {
-  copyIconsIos(files);
+  //copyIconsIos(files);
   enableIosAlternateAppIcons();
 } else {
   console.log('\t[SKIPPED] Platform not handled by Alternate Icons hook:', platform);
@@ -64,7 +64,7 @@ function copyIconsAndroid(files) {
   });
 }
 
-function copyIconsIos(files) {
+/*function copyIconsIos(files) {
   const iosAssetsBaseDir = path.resolve(
     projectDirPath,
     'ios',
@@ -131,7 +131,7 @@ function copyIconsIos(files) {
 
     console.log(`\t[SUCCESS][ios] Cloned AppIcon.appiconset -> ${iconName}.appiconset using ${file}`);
   });
-}
+}*/
 
 
 function enableIosAlternateAppIcons() {
